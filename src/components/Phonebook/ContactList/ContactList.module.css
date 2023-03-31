@@ -3,8 +3,9 @@
 }
 
 .item {
-  margin-bottom: 15px;
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
   align-items: center;
   font-size: 22px;
 }

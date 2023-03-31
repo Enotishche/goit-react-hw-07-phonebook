@@ -1,1 +1,1 @@
-export const getFilter = store => store.contacts.filter;
+//export const getFilter = store => store.contacts.filter;

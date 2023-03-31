@@ -1,26 +1,52 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { nanoid } from "nanoid";
+import { fetchContacts, addContact, removeContact } from '../Operation/operations';
 
-export const contactsSlice = createSlice({
-    name: "contacts",
-    initialState: [],
-    reducers: {
-        addContact: {
-            reducer: (store, {payload}) => {
-                store.push(payload);
-            },
-            prepare: (data) => {
-                return {
-                    payload: {
-                        ...data,
-                        id: nanoid()
-                    }
-                }
-            }
-        },
-        removeContact: (store, {payload}) => store.filter(({id}) => id !== payload)
-    }
-})
+const handlePending = state => {
+    state.isLoading = true;
+  };
+  
+  const handleRejected = (state, action) => {
+    state.isLoading = false;
+    state.error = action.payload;
+  };
+  
 
-export const { addContact, removeContact } = contactsSlice.actions;
-export const getContacts = state => state.contacts.contacts;
+  const contactsSlice = createSlice({
+    name: 'contacts',
+    initialState: {
+      contacts: [],
+      isLoading: false,
+      error: null,
+    },
+    extraReducers: {
+      [fetchContacts.pending]: handlePending,
+      [fetchContacts.fulfilled](state, action) {
+        state.isLoading = false;
+        state.error = null;
+        state.contacts = action.payload;
+      },
+  
+      [fetchContacts.rejected]: handleRejected,
+      [addContact.pending]: handlePending,
+      [addContact.fulfilled](state, { payload }) {
+        state.isLoading = false;
+        state.error = null;
+        state.contacts.push(payload);
+        console.log('payload', payload);
+      },
+  
+      [addContact.rejected]: handleRejected,
+      [removeContact.pending]: handlePending,
+      [removeContact.fulfilled](state, action) {
+        state.isLoading = false;
+        state.error = null;
+        const index = state.contacts.findIndex(
+          contact => contact.id === action.payload.id
+        );
+        state.contacts.splice(index, 1);
+      },
+  
+      [removeContact.rejected]: handleRejected,
+    },
+  });
+  export const contactsReducer = contactsSlice.reducer;
