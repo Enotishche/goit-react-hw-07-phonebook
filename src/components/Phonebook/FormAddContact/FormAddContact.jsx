@@ -2,53 +2,43 @@ import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import styles from './FormAddContact.module.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { addContact } from 'redux/Operation/operations';
-import { getContacts } from 'redux/Operation/selectors';
+import { addContact } from 'redux/Contacts/operations';
+import { getContacts } from 'redux/selectors';
+const init = {
+  name: '',
+  number: '',
+};
 
 const FormAddContact = () => {
-  const [name, setName] = useState('');
-  const [number, setNumber] = useState('');
+  const [form, setForm] = useState(init);
+  const { name, number } = form;
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const nameId = nanoid();
   const numberId = nanoid();
 
-  const handleChange = e => {
-    const { name, value } = e.target;
-    switch (name) {
-      case 'name':
-        setName(value);
-        break;
-      case 'number':
-        setNumber(value);
-        break;
-      default:
-        return;
-    }
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setForm(prevState => ({ ...prevState, [name]: value }));
   };
-
-  // const handleChange = e => {
-  //   console.log(e);
-  //   const { name, value } = e.currentTarget;
-  //   setState(prevState => ({ ...prevState, [name]: value }));
-  // };
 
   const handleSubmit = e => {
     e.preventDefault();
 
     if (
       contacts.find(
-        contact => contact.name === name || contact.number === number
+        contact =>
+          contact.name.toLowerCase() === name.toLowerCase() ||
+          contact.phone === number
       )
     ) {
       return alert(`${name} and ${number} is already in contacts list.`);
     } else {
       // dispatch(addContact(state));
-      dispatch(addContact({ id: nanoid(), name, number }));
+      dispatch(addContact({ name, phone: number }));
     }
-    setName('');
-    setNumber('');
+    setForm(init);
   };
 
   return (

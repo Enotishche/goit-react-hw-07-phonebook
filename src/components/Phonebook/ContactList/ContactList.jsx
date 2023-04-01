@@ -1,29 +1,22 @@
 import styles from './ContactList.module.css';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeContact, fetchContacts } from 'redux/Operation/operations';
-import {
-    getContacts,
-} from 'redux/Operation/selectors';
-import { useEffect } from 'react';
+import { removeContact } from 'redux/Contacts/operations';
+import { getFilteredContacts } from 'redux/selectors';
 
 const ContactList = () => {
-  const contacts = useSelector(getContacts);
+  const contacts = useSelector(getFilteredContacts);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
 
   const handleRemoveContact = id => {
     const action = removeContact(id);
     dispatch(action);
   };
 
-  const elements = contacts.map(({ name, number, id }) => {
+  const elements = contacts.map(({ name, phone, id }) => {
     return (
       <li key={id} className={styles.item}>
-        {name}: {number}{' '}
+        {name}: {phone}
         <span onClick={() => handleRemoveContact(id)} className={styles.remove}>
           delete
         </span>
