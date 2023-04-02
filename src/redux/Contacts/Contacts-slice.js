@@ -32,7 +32,6 @@ const handlePending = state => {
         state.isLoading = false;
         state.error = null;
         state.contacts.push(payload);
-        console.log('payload', payload);
       },
   
       [addContact.rejected]: handleRejected,
