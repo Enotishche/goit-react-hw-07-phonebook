@@ -26,16 +26,10 @@ const FormAddContact = () => {
   const handleSubmit = e => {
     e.preventDefault();
 
-    if (
-      contacts.find(
-        contact =>
-          contact.name.toLowerCase() === name.toLowerCase() ||
-          contact.phone === number
-      )
-    ) {
+    if (contacts.find ( contact => contact.name.toLowerCase() === name.toLowerCase() || contact.phone === number
+      )) {
       return alert(`${name} and ${number} is already in contacts list.`);
     } else {
-      // dispatch(addContact(state));
       dispatch(addContact({ name, phone: number }));
     }
     setForm(init);
